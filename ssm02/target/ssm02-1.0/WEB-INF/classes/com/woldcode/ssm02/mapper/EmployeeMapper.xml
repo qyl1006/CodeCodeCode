@@ -3,9 +3,39 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
     <mapper namespace="com.wolfcode.ssm02.mapper.EmployeeMapper">
+    <insert id="insert" parameterType="employee">
+        insert employee (name, email, age) values (#{name}, #{email}, #{age})
+    </insert>
+    <update id="update" parameterType="employee">
+        update employee set name = #{name}, email = #{email}, age = #{age}
+          where id = #{id}
+    </update>
+    <delete id="deleteById">
+        delete from employee where id = #{id}
+    </delete>
 
-    <select id="getById" resultType="com.wolfcode.ssm02.domain.Employee">
+        <select id="getById" resultType="com.wolfcode.ssm02.domain.Employee">
         select id, name, email, age from employee where id = #{id}
+    </select>
+
+    <sql id="base_where">
+        <where>
+          <if test="keyword != null ">
+            and name like concat('%', #{keyword} , '%') OR
+                email like concat('%', #{keyword}, '%') OR
+                age like concat('%', #{keyword}, '%')
+
+          </if>
+        </where>
+    </sql>
+
+    <select id="queryCount" resultType="int"  parameterType="com.wolfcode.ssm02.query.EmployeeQueryObject">
+        select count(*) FROM  employee <include refid="base_where"/>
+    </select>
+    <select id="queryAll" resultType="employee" parameterType="com.wolfcode.ssm02.query.EmployeeQueryObject">
+        select id, name, email, age from employee
+          <include refid="base_where"/>
+          limit #{start}, #{pageSize}
     </select>
 </mapper>
     

@@ -9,7 +9,15 @@
     <title>Insert title here</title>
 </head>
 <body>
-22333
+<form action="/employee/saveOrUpdate.do" method="post">
+    <input type="hidden" name="id" value="${employee.id}">
+    姓名:<input type="text" name="name" value="${employee.name}"><br>
+    邮箱:<input type="text" name="email" value="${employee.email}"><br>
+    年龄:<input type="number" name="age" value="${employee.age}"><br>
+        <input type="submit" value="提交"/>
+</form>
+
+
 </table>
 </body>
 </html>

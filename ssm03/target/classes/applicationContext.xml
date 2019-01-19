@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+
+            http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context.xsd
+
+            http://www.springframework.org/schema/aop
+            http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+    <!--组件扫描器-->
+    <context:component-scan base-package="cn.wolfcode.ssm03"/>
+
+    <!--属性占位符-->
+    <context:property-placeholder location="classpath:db.properties" system-properties-mode="NEVER"/>
+    <!--德鲁伊连接池-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <!--配置SqlSessionFactory-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--连接池-->
+        <property name="dataSource" ref="dataSource"/>
+        <!--管理mapper文件-->
+        <property name="mapperLocations" value="classpath:cn/wolfcode/ssm03/mapper/*Mapper.xml"/>
+        <!--配置对哪些包的类起别名-->
+        <property name="typeAliasesPackage" value="cn.wolfcode.ssm03.domain"/>
+    </bean>
+
+    <!--配置mapper接口的扫描器 批量创建mapper代理对象-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="cn.wolfcode.ssm03.mapper"/>
+    </bean>
+
+    <!--配置业务层的事物增强-->
+    <!--what : 做什么事物增强-->
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <aop:config>
+        <!--what 在哪里增强-->
+        <aop:pointcut id="pc" expression="execution(* cn.wolfcode.ssm03.service.*Service.*(..))"/>
+        <aop:advisor advice-ref="txAdvisor" pointcut-ref="pc"/>
+    </aop:config>
+    <!--wheen  在什么时机做增强 -->
+    <tx:advice id="txAdvisor" transaction-manager="txManager">
+        <tx:attributes>
+            <!--专门指定DQL操作作为只读-->
+            <tx:method name="get*" read-only="true"/>
+            <tx:method name="query*" read-only="true"/>
+            <tx:method name="list*" read-only="true"/>
+            <tx:method name="select*" read-only="true"/>
+
+            <!--其他操作默认-->
+            <tx:method name="*"/>
+        </tx:attributes>
+    </tx:advice>
+</beans>
