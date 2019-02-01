@@ -17,4 +17,18 @@ public interface IEmployeeService {
      * @param employee
      */
     void saveOrUpdate(Employee employee);
+
+
+    /**
+     * 删除
+     * @param id
+     */
+    void delete(Long id);
+
+    /**
+     * 根据ID 获取Employee对象
+     * @param id
+     * @return
+     */
+    Employee get(Long id);
 }

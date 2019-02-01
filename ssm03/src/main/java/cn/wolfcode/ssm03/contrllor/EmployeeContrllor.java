@@ -25,10 +25,28 @@ public class EmployeeContrllor {
         return "/employee/list";
     }
 
-    @RequestMapping
+    @RequestMapping("saveOrUpdate")
     public String saveOrUpdate(Employee employee){
         employeeService.saveOrUpdate(employee);
 
+        return "redirect:/employee/list.do";
+    }
+
+    @RequestMapping("input")
+    public String input(Long id, Model model){
+        if (id != null){
+            Employee employee = employeeService.get(id);
+            model.addAttribute("emp", employee);
+        }
+
+        return "/employee/input";
+    }
+
+    @RequestMapping("delete")
+    public String delete(Long id){
+        if(id != null){
+            employeeService.delete(id);
+        }
         return "redirect:/employee/list.do";
     }
 }

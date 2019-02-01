@@ -31,4 +31,17 @@ public interface EmployeeMapper {
      * @param employee
      */
     void update(Employee employee);
+
+    /**
+     * 删除
+     * @param id
+     */
+    void delete(Long id);
+
+    /**
+     * 获取
+     * @param id
+     * @return
+     */
+    Employee get(Long id);
 }
