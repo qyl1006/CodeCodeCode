@@ -12,7 +12,7 @@
             http://www.springframework.org/schema/aop
             http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
     <!--组件扫描器  该包下的所有对象交给Spring容器管理-->
-    <context:component-scan base-package="cn.wolfcode.ssm04"/>
+    <context:component-scan base-package="cn.wolfcode.ssm05"/>
 
     <!--属性占位符-->
     <context:property-placeholder location="classpath:db.properties" system-properties-mode="NEVER"/>
@@ -29,14 +29,14 @@
         <!--连接池-->
         <property name="dataSource" ref="dataSource"/>
         <!--管理mapper文件-->
-        <property name="mapperLocations" value="classpath:cn/wolfcode/ssm04/mapper/*Mapper.xml"/>
+        <property name="mapperLocations" value="classpath:cn/wolfcode/ssm05/mapper/*Mapper.xml"/>
         <!--配置对哪些包的类起别名-->
-        <property name="typeAliasesPackage" value="cn.wolfcode.ssm04.domain"/>
+        <property name="typeAliasesPackage" value="cn.wolfcode.ssm05.domain"/>
     </bean>
 
     <!--配置mapper接口的扫描器 批量创建mapper代理对象-->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="cn.wolfcode.ssm04.mapper"/>
+        <property name="basePackage" value="cn.wolfcode.ssm05.mapper"/>
     </bean>
 
     <!--配置业务层的事物增强-->
@@ -47,7 +47,7 @@
 
     <aop:config>
         <!--what 在哪里增强-->
-        <aop:pointcut id="pc" expression="execution(* cn.wolfcode.ssm04.service.*Service.*(..))"/>
+        <aop:pointcut id="pc" expression="execution(* cn.wolfcode.ssm05.service.*Service.*(..))"/>
         <aop:advisor advice-ref="txAdvisor" pointcut-ref="pc"/>
     </aop:config>
     <!--wheen  在什么时机做增强 -->

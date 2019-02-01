@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+   <mapper namespace="cn.wolfcode.ssm05.mapper.EmployeeMapper">
+
+    <sql id="baseWhere">
+        <where>
+            <if test="keyword != null ">
+                and name like concat('%', #{keyword}, '%') OR
+                    email like concat('%', #{keyword}, '%')
+            </if>
+        </where>
+    </sql>
+    <insert id="save" parameterType="employee">
+        insert employee (name, email, age) VALUES (#{name}, #{email}, #{age})
+    </insert>
+    <update id="update" parameterType="employee">
+        update employee set name = #{name}, email = #{email}, age = #{age} WHERE id = #{id}
+    </update>
+    <delete id="delete">
+        delete from employee where id = #{id}
+    </delete>
+
+    <select id="queryCount" resultType="int" parameterType="cn.wolfcode.ssm05.query.EmployeeQueryObject">
+        select count(*) from employee <include refid="baseWhere"/>
+    </select>
+
+    <select id="queryAll" resultType="employee" parameterType="cn.wolfcode.ssm05.query.EmployeeQueryObject">
+      select id, name, email, age from employee
+        <include refid="baseWhere"/>
+        limit #{start}, #{pageSize}
+    </select>
+    <select id="get" resultType="employee">
+        select id, name, email, age from employee WHERE  id = #{id}
+    </select>
+</mapper>
